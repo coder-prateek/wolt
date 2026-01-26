@@ -1,5 +1,5 @@
-import zustandStorage from '@/utils/zustandStorage';
-import { create } from 'zustand';
+import zustandStorage from "@/utils/zustand-storage";
+import { create } from "zustand";
 import { createJSONStorage, persist } from 'zustand/middleware';
 
 interface UserStore {

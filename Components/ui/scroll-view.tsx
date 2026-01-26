@@ -4,6 +4,8 @@ import Animated, {
     useAnimatedReaction,
     useAnimatedRef,
     useSharedValue,
+    withRepeat,
+    withTiming,
 } from "react-native-reanimated";
 
 const iconDataSets = {
@@ -46,24 +48,24 @@ const ScrollView = ({
     const IconData = iconDataSets[iconSet];
 
     const Item = [...IconData, ...IconData];
-    const totalItemHeight = Item.length * ITEM_HEIGHT;
+    const totalItemHeight = IconData.length * ITEM_HEIGHT;
+    const totalWrapHeight = totalItemHeight + IconData.length * GAP;
 
     useEffect(() => {
-        if (ScrollDirection === "up") {
-            scrollY.value = totalItemHeight;
-        } else {
+        const duration = (totalWrapHeight / SCROLL_SPEED) * 1000;
+
+        if (ScrollDirection === "down") {
             scrollY.value = 0;
+            scrollY.value = withRepeat(
+                withTiming(totalItemHeight, { duration }),
+                -1,
+                false,
+            );
+        } else {
+            scrollY.value = totalWrapHeight;
+            scrollY.value = withRepeat(withTiming(0, { duration }), -1, false);
         }
-
-        const interVeal = setInterval(() => {
-            const interval =
-                (SCROLL_SPEED / 30) * (ScrollDirection === "down" ? 1 : -1);
-
-            scrollY.value += interval;
-        }, 1000 / 30);
-
-        return () => clearInterval(interVeal);
-    }, [ScrollDirection]);
+    }, [ScrollDirection, totalItemHeight]);
 
     useAnimatedReaction(
         () => scrollY.value,
@@ -100,10 +102,12 @@ const ScrollView = ({
                     key={index}
                     className={`   items-center justify-center rounded-[20px]`}
                     style={{
-                        width: 140,
+                        width: 160,
                         backgroundColor: item.color,
                         height: ITEM_HEIGHT,
-                        marginBottom: GAP,
+                        alignItems: "center",
+                        justifyContent: "center",
+                        borderRadius: 20,
                         marginHorizontal: 5,
                         boxShadow: "0px -2px 10px rgba(0, 0, 0, 0.1)",
                     }}

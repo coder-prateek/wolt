@@ -1,14 +1,22 @@
 import AuthButtons from "@/Components/ui/Buttons/auth-bttons";
 import ScrollView from "@/Components/ui/scroll-view";
+import useUserStore from "@/hooks/use-userstore";
 import { LinearGradient } from "expo-linear-gradient";
 import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 
 export default function Index() {
+  const { setIsGuest, } = useUserStore()
+
   const openWebBrowser = () => {
     console.log("Open Web Browser");
   };
+
+  const continueAsGuest = () => {
+    setIsGuest(true);
+  };
+
   return (
     <View style={styles.constainer}>
       <View style={styles.infiniteScroller}>
@@ -58,6 +66,13 @@ export default function Index() {
             delay={200}
             className="bg-blue-500"
             icon="logo-google"
+          />
+          <AuthButtons
+            name="Continue as a Guest"
+            delay={200}
+            className="bg-gray-500"
+            icon="person-outline"
+            onPress={continueAsGuest}
           />
         </View>
 
@@ -109,7 +124,7 @@ const styles = StyleSheet.create({
   //   lineHeight: 36,
   // },
   infiniteScroller: {
-    flex: 0.8,
+    flex: 1,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",

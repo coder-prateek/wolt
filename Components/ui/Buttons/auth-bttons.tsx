@@ -10,11 +10,13 @@ const AuthButtons = ({
     delay,
     className,
     icon,
+    onPress,
 }: {
     name: string;
     delay: number;
     className?: string;
     icon?: React.ComponentProps<typeof Ionicons>["name"];
+    onPress?: () => void;
 }) => {
     return (
         <Animated.View entering={FadeInDown.delay(delay)} className={""}>
@@ -49,6 +51,7 @@ const AuthButtons = ({
                     "flex-row items-center justify-center py-5 gap-4 rounded-xl ",
                     className,
                 )}
+                onPress={onPress}
             >
                 <PressableFeedback.Ripple
                     animation={{
