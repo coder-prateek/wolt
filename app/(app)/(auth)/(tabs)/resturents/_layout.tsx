@@ -4,8 +4,8 @@ import React from 'react'
 
 const ResturentLayout = () => {
     return (
-        <Stack>
-            <Stack.Screen name='index' options={{ title: 'Resturents' }} />
+        <Stack screenOptions={{ contentStyle: { backgroundColor: "#fff" } }}>
+            <Stack.Screen name='index' options={{ headerShown: false }} />
         </Stack>
     )
 }

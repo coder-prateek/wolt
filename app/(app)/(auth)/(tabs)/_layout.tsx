@@ -1,6 +1,3 @@
-
-
-
 import { FontAwesome5, Ionicons, MaterialIcons } from '@expo/vector-icons'
 import { Tabs } from 'expo-router'
 import React from 'react'
@@ -14,7 +11,6 @@ const MainLayout = () => {
 
             }
         }}>
-
             <Tabs.Screen name="resturents" options={{
                 headerShown: false, title: 'Resturents', tabBarIcon: ({ color, size }) => (
                     <MaterialIcons name={"restaurant"} size={size} color={color} />
