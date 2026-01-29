@@ -10,24 +10,43 @@ const CategoryList = () => {
 
     const renderItem = ({ item }: { item: typeof categories[0] }) => (
         <TouchableOpacity style={{
-            width: 130,
+            width: 300,
             borderRadius: 12,
             overflow: 'hidden',
             backgroundColor: '#fff',
             marginVertical: 8,
             boxShadow: '0px 4px 2px -2px rgba(0, 0, 0, 0.2)',
-            elevation: 2,
+
         }}>
-            <View className='p-3' style={{ backgroundColor: item.backgroundColor }}>
-                <Image source={item.image} style={{ width: 106, height: 106, borderRadius: 8 }} />
+            <View className=''>
+                <Image source={item.image} className='object-cover items-center h-64 w-78 justify-center' />
             </View>
             <View style={styles.categoryInfo}>
                 <Text style={{
                     fontSize: 14,
                     fontWeight: '600',
-                    marginBottom: 2,
+                    marginBottom: 4,
+
                 }}>{item.name}</Text>
-                <Text style={{ fontSize: 12, color: Colors.muted }}>{item.placesCount} places</Text>
+                <View style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: 'center'
+
+                }}>
+
+                    <Text style={{ fontSize: 16, color: "#F95555" }}>{item.price} </Text>
+                    <Buttons className=' border-primary border px-3 py-1 '>
+                        <Text
+                            className="text-primary"
+                            style={{ fontSize: 16, fontWeight: "600" }}
+                        >
+                            Add +
+                        </Text>
+
+
+                    </Buttons>
+                </View>
             </View>
         </TouchableOpacity>
     )
@@ -35,23 +54,23 @@ const CategoryList = () => {
 
 
     return (
-        <View className='mt-4'>
-            <View className='items-center justify-between flex-row px-4'>
+        <View >
+            <View className='items-center justify-between flex-row px-4 mb-2 '>
                 <Text style={{
-                    fontSize: 20,
+                    fontSize: 30,
                     fontWeight: '600',
                     fontFamily: Fonts.brandBold
 
-                }}>Categories</Text>
-                <Buttons className=' bg-primary px-5 py-3 '>
+                }}>Popular Dises</Text>
+                <Buttons className=' border-primary border px-3 py-1 '>
                     <Text
-                        className="text-white"
+                        className="text-primary"
                         style={{ fontSize: 16, fontWeight: "600" }}
                     >
                         See All
                     </Text>
 
-                    <Ionicons name="arrow-forward" size={18} color="#fff" />
+                    <Ionicons name="arrow-forward" size={18} color="#F95555" />
                 </Buttons>
             </View>
 

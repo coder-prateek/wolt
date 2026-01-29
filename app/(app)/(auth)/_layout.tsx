@@ -43,6 +43,7 @@ const Layout = () => {
                     </TouchableOpacity>
                 )
             }} />
+            <Stack.Screen name="(modal)/map" options={{}} />
         </Stack>
     )
 }

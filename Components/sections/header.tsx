@@ -1,123 +1,120 @@
-import { Colors } from '@/constants/theme';
-import { Ionicons } from '@expo/vector-icons';
-import { Link } from 'expo-router';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import { useRouter } from 'expo-router';
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Animated, { Extrapolation, interpolate, SharedValue, useAnimatedStyle } from 'react-native-reanimated';
+import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import Animated, {
+    Extrapolation,
+    interpolate,
+    SharedValue,
+    useAnimatedStyle,
+} from 'react-native-reanimated';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const SCROLL_THRESHOLD = 60
-const ResturentHeader = ({ title, scrollOffset }: { title: string, scrollOffset: SharedValue<number> }) => {
+interface RestaurantHeaderProps {
+    title?: string;
+    scrollOffset: SharedValue<number>;
+    profile?: boolean;
+    search?: boolean;
+}
 
-    const insets = useSafeAreaInsets()
+const SCOLL_THRESHOLD = 60;
 
-    const header1Style = useAnimatedStyle(() => {
-        const opacity = interpolate(
-            scrollOffset.value,
-            [0, SCROLL_THRESHOLD * 0.6],
-            [1, 0],
-            Extrapolation.CLAMP
-        )
-
-        const translateY = interpolate(
-            scrollOffset.value,
-            [0, SCROLL_THRESHOLD * 0.6],
-            [0, -10],
-            Extrapolation.CLAMP
-        )
-
-        return {
-            opacity,
-            transform: [{ translateY }],
-        }
-    })
-
-    const header2Style = useAnimatedStyle(() => {
-        const opacity = interpolate(
-            scrollOffset.value,
-            [SCROLL_THRESHOLD * 0.3, SCROLL_THRESHOLD],
-            [0, 1],
-            Extrapolation.CLAMP
-        )
-
-        const translateY = interpolate(
-            scrollOffset.value,
-            [SCROLL_THRESHOLD * 0.3, SCROLL_THRESHOLD],
-            [-10, 0],
-            Extrapolation.CLAMP
-        )
-
-        return {
-            opacity,
-            transform: [{ translateY }],
-        }
-    })
+const RestaurantHeader = ({ title, profile = false, search = false, scrollOffset }: RestaurantHeaderProps) => {
+    const insets = useSafeAreaInsets();
 
     const shadowStyle = useAnimatedStyle(() => {
         const opacity = interpolate(
             scrollOffset.value,
-            [0, SCROLL_THRESHOLD],
-            [0, 0.2],
+            [0, SCOLL_THRESHOLD],
+            [0, 1],
             Extrapolation.CLAMP
-        )
+        );
 
         return {
             shadowOpacity: opacity * 0.1,
             elevation: opacity * 4,
-        }
-    })
+        };
+    });
+
+
+    const router = useRouter()
+
 
 
     return (
-        <Animated.View style={[styles.headerContainer, shadowStyle, { paddingTop: insets.top }]}>
-            {/* Header 1 */}
-            <Animated.View style={[styles.header1, header1Style]}>
-                <Link href={'/(app)/(auth)/(modal)/location'} asChild>
-                    <TouchableOpacity style={styles.locationButton}>
-                        <View style={styles.locationButtonIcon}>
-                            <Ionicons name="business-outline" size={16} />
+        <Animated.View className=" bg-black" style={[styles.headerContainer, shadowStyle, { paddingTop: insets.top }]}>
+
+            {
+                profile ? (
+
+
+
+                    <View className=" flex-row w-full  items-center justify-between px-6  mb-4">
+                        <View className=" flex-row items-center justify-center gap-4">
+                            <Image
+                                src="https://images.unsplash.com/photo-1701615004837-40d8573b6652?q=80&w=1160&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                                className="h-10 w-10 rounded-full"
+                            />
+                            <View>
+                                <Text className="text-gray-600 text-sm font-bold">Delever to</Text>
+                                <Text className="text-gray-800 text-md ">Prayagraj, UP</Text>
+                            </View>
                         </View>
-                        <Text style={styles.locationText}>Münster</Text>
-                        <Ionicons name="chevron-down" size={16} />
-                    </TouchableOpacity>
-                </Link>
 
-                <View style={styles.rightIcons}>
-                    <Link href={'/(app)/(auth)/(modal)/filter'} asChild>
-                        <TouchableOpacity style={styles.iconButton}>
-                            <Ionicons name="filter" size={20} />
+                        <Ionicons name="notifications-sharp" size={24} color="black" />
+                    </View>
+                ) : (
+                    <View className=" flex-row w-full  items-center justify-between px-6  mb-4">
+                        {/* back */}
+                        <TouchableOpacity activeOpacity={0.5} className='  bg-white rounded-full p-2 shadow-lg' onPress={() => router.back()}>
+                            <Ionicons name="chevron-back" size={24} color="black" />
                         </TouchableOpacity>
-                    </Link>
-                    {/* <Link href={'/(app)/(auth)/(modal)/map'} asChild> */}
-                    <TouchableOpacity style={styles.iconButton}>
-                        <Ionicons name="map-outline" size={20} />
-                    </TouchableOpacity>
-                    {/* </Link> */}
-                </View>
-            </Animated.View>
+                        <Text className="text-2xl font-bold">{title}</Text>
+                        {/* cart */}
 
-            {/* Header 2 */}
-            <Animated.View style={[styles.header2, header2Style]}>
-                <View style={styles.centerContent}>
-                    <Text style={styles.titleSmall}>{title}</Text>
-                    <Link href={'/(app)/(auth)/(modal)/location'} asChild>
-                        <TouchableOpacity style={styles.locationSmall}>
-                            <Text style={styles.locationSmallText}>Münster</Text>
-                            <Ionicons name="chevron-down" size={14} />
+                        <TouchableOpacity activeOpacity={0.5} className='  bg-white rounded-full p-2 shadow-lg '>
+                            <Ionicons name="cart" size={24} color="black" />
                         </TouchableOpacity>
-                    </Link>
+                    </View>
+                )
+            }
+            {
+                search &&
+                <View style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    borderWidth: 1,
+                    borderRadius: 8,
+                    paddingHorizontal: 10,
+                    width: '90%',
+                    marginBottom: 10,
+                    marginLeft: 20,
+                    borderColor: '#ccc',
+                    backgroundColor: '#f0f0f0',
+                    paddingVertical: 5,
+                }}>
+
+
+                    <Ionicons name="search" size={24} color="gray" />
+                    <TextInput
+                        style={{
+                            flex: 1,
+                            paddingLeft: 10,
+                        }}
+                        placeholder="Search Your Meal"
+                        placeholderTextColor="#999"
+
+
+                    />
+
                 </View>
-                <View style={styles.rightIcons}>
-                    <Link href={'/(app)/(auth)/(modal)/filter'} asChild>
-                        <TouchableOpacity style={styles.iconButton}>
-                            <Ionicons name="filter" size={20} />
-                        </TouchableOpacity>
-                    </Link>
-                </View>
-            </Animated.View>
+            }
+
+
         </Animated.View>
-    )
-}
+    );
+};
+
 
 const styles = StyleSheet.create({
     headerContainer: {
@@ -132,71 +129,6 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowRadius: 4,
     },
-    header1: {
-        paddingHorizontal: 16,
-        paddingTop: 8,
-        paddingBottom: 12,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    header2: {
-        position: 'absolute',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        paddingHorizontal: 16,
-        paddingVertical: 12,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    locationText: {
-        fontSize: 14,
-        fontWeight: '600',
-    },
-    locationButton: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        borderRadius: 20,
-        gap: 6,
-    },
-    locationButtonIcon: {
-        borderRadius: 20,
-        backgroundColor: Colors.light,
-        padding: 10,
-    },
-    rightIcons: {
-        flexDirection: 'row',
-        gap: 8,
-    },
-    iconButton: {
-        width: 40,
-        height: 40,
-        backgroundColor: Colors.light,
-        borderRadius: 20,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    centerContent: {
-        flex: 1,
-        alignItems: 'center',
-        paddingLeft: 40,
-    },
-    titleSmall: {
-        fontSize: 16,
-        fontWeight: 700,
-        marginBottom: 2,
-    },
-    locationSmall: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: 2,
-    },
-    locationSmallText: {
-        fontSize: 12,
-        color: Colors.muted,
-    },
 });
 
-export default ResturentHeader
+export default RestaurantHeader;

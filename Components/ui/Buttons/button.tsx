@@ -22,7 +22,7 @@ const Buttons = ({
         <Animated.View entering={FadeInDown.delay(delay ?? 0)} className={""}>
             <PressableFeedback
                 className={cn(
-                    "flex-row items-center justify-center py-5 gap-4  rounded-br-2xl rounded-tl-2xl",
+                    "flex-row items-center justify-center py-5 gap-4  rounded-bl-2xl rounded-tr-2xl",
                     className,
                 )}
                 onPress={onPress}

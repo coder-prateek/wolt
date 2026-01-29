@@ -16,9 +16,9 @@ const MainLayout = () => {
                     <MaterialIcons name={"restaurant"} size={size} color={color} />
                 )
             }} />
-            <Tabs.Screen name="discovery" options={{
-                headerShown: false, title: 'Discovery', tabBarIcon: ({ color, size, focused }) => (
-                    <Ionicons name={focused ? "compass" : "compass-outline"} size={size} color={color} />
+            <Tabs.Screen name="menu" options={{
+                headerShown: false, title: 'Menu', tabBarIcon: ({ color, size, focused }) => (
+                    <Ionicons name={focused ? "restaurant" : "restaurant-outline"} size={size} color={color} />
                 )
             }} />
 
