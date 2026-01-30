@@ -16,7 +16,6 @@ const CategoryList = () => {
             backgroundColor: '#fff',
             marginVertical: 8,
             boxShadow: '0px 4px 2px -2px rgba(0, 0, 0, 0.2)',
-
         }}>
             <View className=''>
                 <Image source={item.image} className='object-cover items-center h-64 w-78 justify-center' />
@@ -26,13 +25,11 @@ const CategoryList = () => {
                     fontSize: 14,
                     fontWeight: '600',
                     marginBottom: 4,
-
                 }}>{item.name}</Text>
                 <View style={{
                     flexDirection: "row",
                     justifyContent: "space-between",
                     alignItems: 'center'
-
                 }}>
 
                     <Text style={{ fontSize: 16, color: "#F95555" }}>{item.price} </Text>
