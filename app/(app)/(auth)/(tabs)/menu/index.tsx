@@ -1,5 +1,6 @@
 import ResturentHeader from '@/Components/sections/header'
 import Menutab from '@/Components/sections/tabs/menutab'
+import CartBottomBar from '@/Components/ui/cart-bottom-bar'
 import React from 'react'
 import { View } from 'react-native'
 import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
@@ -32,6 +33,7 @@ const Page = () => {
 
 
             </Animated.ScrollView>
+            <CartBottomBar />
         </View>
     )
 }
