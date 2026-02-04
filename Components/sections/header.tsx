@@ -72,7 +72,7 @@ const RestaurantHeader = ({ title, profile = false, search = false, scrollOffset
                         <Text className="text-2xl font-bold">{title}</Text>
                         {/* cart */}
 
-                        <TouchableOpacity activeOpacity={0.5} className='  bg-white rounded-full p-2 shadow-lg '>
+                        <TouchableOpacity activeOpacity={0.5} className='  bg-white rounded-full p-2 shadow-lg ' onPress={() => router.push('/(auth)/(tabs)/cart')}>
                             <Ionicons name="cart" size={24} color="black" />
                         </TouchableOpacity>
                     </View>

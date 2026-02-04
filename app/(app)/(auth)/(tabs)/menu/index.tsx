@@ -1,7 +1,7 @@
 import ResturentHeader from '@/Components/sections/header'
 import Menutab from '@/Components/sections/tabs/menutab'
 import CartBottomBar from '@/Components/ui/cart-bottom-bar'
-import React from 'react'
+import React, { memo } from 'react'
 import { View } from 'react-native'
 import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
@@ -38,4 +38,4 @@ const Page = () => {
     )
 }
 
-export default Page
+export default memo(Page)

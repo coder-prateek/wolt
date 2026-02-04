@@ -1,4 +1,4 @@
-import { FontAwesome5, Ionicons, MaterialIcons } from '@expo/vector-icons'
+import { Ionicons, MaterialIcons } from '@expo/vector-icons'
 import { Tabs } from 'expo-router'
 import React from 'react'
 
@@ -21,18 +21,13 @@ const MainLayout = () => {
                     <Ionicons name={focused ? "restaurant" : "restaurant-outline"} size={size} color={color} />
                 )
             }} />
-
-            <Tabs.Screen name="stores" options={{
-                headerShown: false, title: 'Stores', tabBarIcon: ({ color, size, focused }) => (
-                    <Ionicons name={focused ? "storefront" : "storefront-outline"} size={size} color={color} />
+            <Tabs.Screen name="cart" options={{
+                headerShown: false, title: 'Cart', tabBarIcon: ({ color, size }) => (
+                    <Ionicons name="cart" size={size} color={color} />
                 )
             }} />
 
-            <Tabs.Screen name="search" options={{
-                headerShown: false, title: 'Search', tabBarIcon: ({ color, size, focused }) => (
-                    <FontAwesome5 name={focused ? "search-location" : "search"} size={size} color={color} />
-                )
-            }} />
+
             <Tabs.Screen name="profile" options={{
                 headerShown: false, title: 'Profile', tabBarIcon: ({ color, size }) => (
                     <Ionicons name="person" size={size} color={color} />

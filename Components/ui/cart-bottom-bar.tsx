@@ -19,7 +19,7 @@ const CartBottomBar = () => {
         >
             <Pressable
                 style={styles.bar}
-            // onPress={() => router.push('/(modal)/cart' as any)}
+                onPress={() => router.push('/(auth)/(tabs)/cart' as any)}
             >
 
                 <View style={styles.countBadge}>
