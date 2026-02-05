@@ -20,6 +20,27 @@ const Layout = () => {
                 }
 
             />
+            <Stack.Screen
+                name="(modal)/address"
+                options={{
+                    presentation: "formSheet",
+                    sheetAllowedDetents: [0.7],
+                    title: "",
+                    headerShadowVisible: false,
+                    sheetCornerRadius: 16,
+                    sheetGrabberVisible: true,
+                    headerRight: () => (
+                        <TouchableOpacity
+                            style={{ padding: 4, borderRadius: 20, backgroundColor: Colors.light }}
+                            onPress={() => router.dismiss()}>
+                            <Ionicons name="close-sharp" size={28} />
+                        </TouchableOpacity>
+                    )
+
+                }
+                }
+
+            />
             <Stack.Screen name="(modal)/filter" options={{
                 presentation: "formSheet",
                 sheetAllowedDetents: [0.8],
@@ -54,6 +75,13 @@ const Layout = () => {
                 )
             }} />
             <Stack.Screen name="(modal)/map" options={{ headerShown: false }} />
+
+            <Stack.Screen
+                name="order"
+                options={{
+                    headerShown: false,
+                }}
+            />
         </Stack>
     )
 }

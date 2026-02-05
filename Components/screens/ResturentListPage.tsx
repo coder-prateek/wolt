@@ -1,4 +1,5 @@
 import { Fonts } from '@/constants/theme'
+
 import React from 'react'
 import { Text, View } from 'react-native'
 import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
@@ -12,6 +13,7 @@ import Slider from '../ui/slider'
 const HEADER_HEIGHT = 100;
 const ResturentListPage = () => {
     const insets = useSafeAreaInsets()
+
     const scrollOffset = useSharedValue(0)
 
     const scrollHandler = useAnimatedScrollHandler({
@@ -19,6 +21,9 @@ const ResturentListPage = () => {
             scrollOffset.value = event.contentOffset.y
         }
     })
+
+
+    // console.log(text)
 
     const items = [
         {
@@ -73,6 +78,7 @@ const ResturentListPage = () => {
     ];
     return (
         <View className='flex-1 '>
+
             <ResturentHeader scrollOffset={scrollOffset} search={true} profile={true} />
             <Animated.ScrollView showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingTop: insets.top + HEADER_HEIGHT }}
                 onScroll={scrollHandler}
@@ -83,6 +89,8 @@ const ResturentListPage = () => {
                 <View className='mt-4'>
                     <Slider item={foodItems} />
                 </View>
+
+
                 {/* <Text style={{
                     fontFamily: Fonts.brandBold,
                     paddingHorizontal: 16

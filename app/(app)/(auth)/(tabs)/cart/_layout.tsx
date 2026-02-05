@@ -5,7 +5,7 @@ import React from 'react'
 const CartLayout = () => {
     return (
         <Stack>
-            <Stack.Screen name='index' options={{ title: 'Cart' }} />
+            <Stack.Screen name='index' options={{ headerShown: false, title: 'Cart' }} />
         </Stack>
     )
 }

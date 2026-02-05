@@ -1,8 +1,15 @@
+import useAddressStore from '@/hooks/use-address'
 import { Ionicons, MaterialIcons } from '@expo/vector-icons'
 import { Tabs } from 'expo-router'
-import React from 'react'
+import React, { useEffect } from 'react'
 
 const MainLayout = () => {
+    const getCurrentAddress = useAddressStore((state) => state.getCurrentAddress)
+
+    useEffect(() => {
+        getCurrentAddress?.()
+    }, [getCurrentAddress])
+
     return (
         <Tabs screenOptions={{
             tabBarLabelStyle: {
@@ -22,10 +29,13 @@ const MainLayout = () => {
                 )
             }} />
             <Tabs.Screen name="cart" options={{
-                headerShown: false, title: 'Cart', tabBarIcon: ({ color, size }) => (
-                    <Ionicons name="cart" size={size} color={color} />
+                headerShown: false, title: 'Cart', tabBarIcon: ({ color, size, focused
+
+                }) => (
+                    <Ionicons name={focused ? "cart" : "cart-outline"} size={size} color={color} />
                 )
             }} />
+
 
 
             <Tabs.Screen name="profile" options={{
