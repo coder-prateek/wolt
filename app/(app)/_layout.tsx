@@ -1,9 +1,11 @@
-import useUserStore from "@/hooks/use-userstore";
+import useUserStore from "@/storage/use-userstore";
 import { Stack } from "expo-router";
 import React from "react";
 
 const MainLayout = () => {
     const { isGuest, user } = useUserStore();
+
+    console.log(user)
     return (
         <Stack>
             <Stack.Protected guard={isGuest || user} >

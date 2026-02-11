@@ -1,4 +1,4 @@
-import { useCartStore } from '@/hooks/use-cartstore';
+import { useCartStore } from '@/storage/use-cartstore';
 import { useRouter } from 'expo-router';
 import React, { memo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';

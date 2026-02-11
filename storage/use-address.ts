@@ -3,7 +3,7 @@ import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
 
-import zustandStorage from "@/utils/zustand-storage";
+import zustandStorage from "@/storage/zustand-storage";
 interface UseAddressResult {
     name?: string;
     city: string;

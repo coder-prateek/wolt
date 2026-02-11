@@ -1,8 +1,15 @@
 import { createMMKV } from "react-native-mmkv";
 import { StateStorage } from "zustand/middleware";
 
+export const tokenStorage = createMMKV({
+    id: "token-storage",
+    encryptionKey: "my-encryption-key",
+})
 
-const storage = createMMKV()
+const storage = createMMKV({
+    id: "my-app-storage",
+    encryptionKey: "my-encryption-key",
+})
 
 const zustandStorage: StateStorage = {
     setItem: (name, value) => {
@@ -20,3 +27,5 @@ const zustandStorage: StateStorage = {
 
 
 export default zustandStorage;
+
+

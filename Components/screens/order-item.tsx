@@ -1,5 +1,5 @@
 import { Colors } from '@/constants/theme';
-import { CartItem, useCartStore } from '@/hooks/use-cartstore';
+import { CartItem, useCartStore } from '@/storage/use-cartstore';
 import { Ionicons } from '@expo/vector-icons';
 import * as Haptics from 'expo-haptics';
 import React, { useRef } from 'react';

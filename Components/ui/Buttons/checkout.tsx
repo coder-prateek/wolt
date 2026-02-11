@@ -1,5 +1,5 @@
 import { Colors } from '@/constants/theme';
-import { useCartStore } from '@/hooks/use-cartstore';
+import { useCartStore } from '@/storage/use-cartstore';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Link } from 'expo-router';
 import React from 'react';

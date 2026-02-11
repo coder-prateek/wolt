@@ -1,5 +1,5 @@
 import { Dish } from '@/data/restaurant_menu';
-import { useCartStore } from '@/hooks/use-cartstore';
+import { useCartStore } from '@/storage/use-cartstore';
 import { Ionicons } from '@expo/vector-icons';
 import React, { FC, memo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';

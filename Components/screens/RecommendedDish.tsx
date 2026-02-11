@@ -1,6 +1,6 @@
 import { Colors } from '@/constants/theme';
 import type { Dish } from '@/data/restaurant_menu';
-import { useCartStore } from '@/hooks/use-cartstore';
+import { useCartStore } from '@/storage/use-cartstore';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';

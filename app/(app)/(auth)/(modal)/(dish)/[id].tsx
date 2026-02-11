@@ -1,6 +1,6 @@
 import ReccomendedItem from '@/Components/recomended';
 import Buttons from '@/Components/ui/Buttons/button';
-import { useCartStore } from '@/hooks/use-cartstore';
+import { useCartStore } from '@/storage/use-cartstore';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams, useRouter } from 'expo-router';

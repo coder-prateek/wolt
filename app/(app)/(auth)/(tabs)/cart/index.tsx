@@ -1,5 +1,5 @@
-import useAddressStore from '@/hooks/use-address'
-import { useCartStore } from '@/hooks/use-cartstore'
+import useAddressStore from '@/storage/use-address'
+import { useCartStore } from '@/storage/use-cartstore'
 import { Ionicons } from '@expo/vector-icons'
 import { useRouter } from 'expo-router'
 import React, { useState } from 'react'

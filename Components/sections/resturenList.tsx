@@ -1,5 +1,5 @@
 import { Colors } from '@/constants/theme';
-import { useRestaurants } from '@/hooks/useRestaurants';
+import { useRestaurants } from '@/storage/useRestaurants';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import React from 'react';
 import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';

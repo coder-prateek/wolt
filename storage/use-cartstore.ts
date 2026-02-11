@@ -1,6 +1,6 @@
 import { Dish } from '@/data/restaurant_menu';
 import type { Restaurant } from '@/data/restaurants';
-import zustandStorage from '@/utils/zustand-storage';
+import zustandStorage from '@/storage/zustand-storage';
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
 

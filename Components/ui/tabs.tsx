@@ -124,7 +124,6 @@ const TabBadge: React.FC<{
         </View>
     );
 
-// Individual Tab component
 interface TabButtonProps<T> {
     tab: TabItem<T>;
     isActive: boolean;

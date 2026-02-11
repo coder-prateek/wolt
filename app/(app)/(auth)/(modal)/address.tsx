@@ -1,5 +1,5 @@
 import { Colors } from '@/constants/theme';
-import { useRestaurantMarkers, useRestaurants } from '@/hooks/useRestaurants';
+import { useRestaurantMarkers, useRestaurants } from '@/storage/useRestaurants';
 import { Ionicons } from '@expo/vector-icons';
 import * as Location from 'expo-location';
 import { AppleMaps } from 'expo-maps';

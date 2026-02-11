@@ -1,14 +1,13 @@
 
-import useUserStore from '@/hooks/use-userstore';
+import { useLogoutMutation } from '@/hooks/mutate/auth';
 import React from 'react';
 import { Text, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 
 const Page = () => {
-    const { setIsGuest } = useUserStore();
+    const { mutate, isPending } = useLogoutMutation();
     const onLogout = () => {
-        console.log('logout');
-        setIsGuest(false);
+        mutate();
     };
     return (
         <ScrollView contentInsetAdjustmentBehavior='automatic' className='flex-1 '>
@@ -19,7 +18,7 @@ const Page = () => {
                 alignItems: 'center',
                 justifyContent: 'center',
                 margin: 16,
-            }} onPress={onLogout}>
+            }} onPress={onLogout} disabled={isPending}>
                 <Text style={{
                     color: 'white',
                     fontSize: 16,
