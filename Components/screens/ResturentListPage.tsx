@@ -78,7 +78,6 @@ const ResturentListPage = () => {
     ];
     return (
         <View className='flex-1 '>
-
             <ResturentHeader scrollOffset={scrollOffset} search={true} profile={true} />
             <Animated.ScrollView showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingTop: insets.top + HEADER_HEIGHT }}
                 onScroll={scrollHandler}
@@ -89,8 +88,6 @@ const ResturentListPage = () => {
                 <View className='mt-4'>
                     <Slider item={foodItems} />
                 </View>
-
-
                 {/* <Text style={{
                     fontFamily: Fonts.brandBold,
                     paddingHorizontal: 16

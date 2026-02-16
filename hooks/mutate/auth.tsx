@@ -1,3 +1,4 @@
+import { Api } from "@/lib/api";
 import { authService, LoginRequest, SignupRequest } from "@/services/authService";
 import useUserStore from "@/storage/use-userstore";
 import { MutationOptions, useMutation } from "@tanstack/react-query";
@@ -78,6 +79,17 @@ export const usePasswordResetMutation = <TData, TVariables>(options?: MutationOp
             // Implement password reset logic here, e.g., call authService.resetPassword(data)
             // For now, we can just return a placeholder response
             return {} as TData;
+        },
+        ...options,
+    });
+}
+
+
+export const useProfileUpdateMutation = <TData, TVariables>(options?: MutationOptions<TData, Error, TVariables>) => {
+    return useMutation({
+        mutationFn: async (data: TVariables) => {
+            const res = await Api.patch('/profile', data);
+            return res.data as TData;
         },
         ...options,
     });

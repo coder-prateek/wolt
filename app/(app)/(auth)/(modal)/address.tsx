@@ -1,268 +1,289 @@
-import { Colors } from '@/constants/theme';
-import { useRestaurantMarkers, useRestaurants } from '@/storage/useRestaurants';
-import { Ionicons } from '@expo/vector-icons';
-import * as Location from 'expo-location';
-import { AppleMaps } from 'expo-maps';
-import { Link, useRouter } from 'expo-router';
-import React, { useEffect, useRef } from 'react';
+import { Colors, Fonts } from '@/constants/theme'
+import { useSetDefaultAddressMutation } from '@/hooks/mutate/address'
+import { SavedAddress, useGetAddressesQuery } from '@/hooks/query/address'
+import useAddressStore from '@/storage/use-address'
+import { Ionicons } from '@expo/vector-icons'
+import * as Location from 'expo-location'
+import { useRouter } from 'expo-router'
+import React, { memo, useState } from 'react'
 import {
     ActivityIndicator,
-    Platform,
+    Alert,
+    Pressable,
     StyleSheet,
     Text,
-    TouchableOpacity,
-    View
-} from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+    TextInput,
+    View,
+} from 'react-native'
+import { ScrollView } from 'react-native-gesture-handler'
+
+const LABEL_ICONS: Record<string, keyof typeof Ionicons.glyphMap> = {
+    Home: 'home-outline',
+    Work: 'briefcase-outline',
+}
 
 const Page = () => {
-    const router = useRouter();
-    const insets = useSafeAreaInsets();
-    const mapRef = useRef<AppleMaps.MapView>(null);
+    const router = useRouter()
+    const setAddress = useAddressStore((state) => state.setAddress)
+    const [locating, setLocating] = useState(false)
 
-    const { data: restaurants, isLoading: restaurantsLoading } = useRestaurants();
-    const { data: restaurantMarkers, isLoading: markersLoading } = useRestaurantMarkers();
-    console.log('🚀 ~ Page ~ restaurantMarkers:', restaurantMarkers);
+    const { data: savedAddresses, isLoading } = useGetAddressesQuery()
+    const setDefault = useSetDefaultAddressMutation({
+        onSuccess: () => {
+            router.dismiss()
+        },
+        onError: () => {
+            Alert.alert('Error', 'Failed to set default address.')
+        },
+    })
 
-    const markers: AppleMaps.Marker[] =
-        restaurantMarkers?.map((marker) => ({
-            id: marker.id,
-            systemImage: 'circle.fill',
-            tintColor: Colors.muted,
-            coordinates: {
-                latitude: marker.latitude,
-                longitude: marker.longitude,
-            },
-            title: marker.name,
-        })) || [];
-
-    const locateMe = async () => {
+    const handleUseCurrentLocation = async () => {
         try {
-            const location = await Location.getCurrentPositionAsync();
-            mapRef.current?.setCameraPosition({
-                coordinates: {
-                    latitude: location.coords.latitude,
-                    longitude: location.coords.longitude,
-                },
-                zoom: 14,
-            });
-        } catch (error) {
-            console.error('Failed to get location:', error);
-        }
-    };
-
-    useEffect(() => {
-        async function getCurrentLocation() {
-            let { status } = await Location.requestForegroundPermissionsAsync();
-
+            setLocating(true)
+            const { status } = await Location.requestForegroundPermissionsAsync()
             if (status !== 'granted') {
-                console.log('Permission was not granted');
-
-                return;
+                Alert.alert('Permission denied', 'Allow the app to use location services.')
+                return
             }
-            locateMe();
+
+            const location = await Location.getCurrentPositionAsync({
+                accuracy: Location.Accuracy.Balanced,
+            })
+
+            await setAddress?.(location.coords.latitude, location.coords.longitude)
+            router.dismiss()
+        } catch (err) {
+            console.error(err)
+            Alert.alert('Error', 'Could not get your current location.')
+        } finally {
+            setLocating(false)
         }
-        getCurrentLocation();
-    }, []);
-
-    if (restaurantsLoading || markersLoading) {
-        return (
-            <View>
-                <ActivityIndicator size={'large'} color={Colors.secondary} />
-            </View>
-        );
     }
 
-    // const markerSelected = (e: any) => {
-    //     router.push(`/(modal)/(restaurant)/${e.id}`);
-    // };
+    const handleSelectSavedAddress = (address: SavedAddress) => {
+        setAddress?.(address.latitude, address.longitude)
+        setDefault.mutate({ addressId: address._id })
+    }
 
-    if (Platform.OS === 'ios') {
-        return (
-            <>
-                <View style={[styles.header, { paddingTop: insets.top }]}>
-                    <TouchableOpacity style={styles.backButton} onPress={() => router.dismiss()}>
-                        <Ionicons name="chevron-back" size={22} color={Colors.muted} />
-                    </TouchableOpacity>
-                    <View style={styles.headerRight}>
-                        <Link href={'/(app)/(auth)/(modal)/filter'} asChild>
-                            <TouchableOpacity style={styles.backButton}>
-                                <Ionicons name="filter" size={22} />
-                            </TouchableOpacity>
-                        </Link>
-                        <TouchableOpacity style={styles.backButton} onPress={locateMe}>
-                            <Ionicons name="locate-outline" size={22} />
-                        </TouchableOpacity>
-                    </View>
+    const getLabelIcon = (label: string): keyof typeof Ionicons.glyphMap => {
+        return LABEL_ICONS[label] || 'location-outline'
+    }
+
+    return (
+        <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+            {/* Search Bar */}
+            <View style={styles.searchContainer}>
+                <View style={styles.searchBar}>
+                    <Ionicons name="search" size={22} color="#999" />
+                    <TextInput
+                        style={styles.searchInput}
+                        placeholder="Search for area, street name..."
+                        placeholderTextColor="#999"
+                    />
                 </View>
-                {/* <AppleMaps.View
-                    ref={mapRef}
-                    style={StyleSheet.absoluteFill}
-                    markers={markers}
-                    properties={{
-                        isTrafficEnabled: false,
-                        mapType: AppleMapsMapType.STANDARD,
-                        selectionEnabled: false,
-                        isMyLocationEnabled: false,
-                    }}
-                    uiSettings={{
-                        myLocationButtonEnabled: false,
-                        compassEnabled: false,
-                    }}
-                    onMarkerClick={markerSelected}
-                /> */}
-
-                {/* <View style={styles.footerScroll}>
-                    <ScrollView
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                        contentContainerStyle={styles.scrollContent}>
-                        {restaurants?.map((restaurant) => (
-                            <TouchableOpacity
-                                key={restaurant.id}
-                                style={styles.card}
-                                onPress={() => router.push(`/(modal)/(restaurant)/${restaurant.id}`)}>
-                                <Image source={restaurant.image!} style={styles.cardImage} />
-                                <View style={styles.cardContent}>
-                                    <View style={styles.cardHeader}>
-                                        <Text style={styles.cardTitle} numberOfLines={1}>
-                                            {restaurant.name}
-                                        </Text>
-                                        {restaurant.tags.includes('Wolt+') && (
-                                            <View style={styles.woltBadge}>
-                                                <Text style={styles.woltBadgeText}>W+</Text>
-                                            </View>
-                                        )}
-                                    </View>
-                                    <Text style={styles.cardDescription} numberOfLines={1}>
-                                        {restaurant.description}
-                                    </Text>
-                                    <View style={styles.cardFooter}>
-                                        <Ionicons name="bicycle-outline" size={14} color="#666" />
-                                        <Text style={styles.cardFooterText}>
-                                            {restaurant.deliveryFee === 0
-                                                ? 'Free delivery'
-                                                : `${restaurant.deliveryFee.toFixed(2)} €`}
-                                        </Text>
-                                    </View>
-                                </View>
-                            </TouchableOpacity>
-                        ))}
-                    </ScrollView>
-                </View> */}
-            </>
-        );
-    } else if (Platform.OS === 'android') {
-        return (
-            // <GoogleMaps.View style={{ flex: 1 }} />
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={{ fontSize: 16, color: Colors.muted }}>
-                    Google Maps is not supported in Expo Go on Android. Please use a physical device or emulator to view the map.
-                </Text>
             </View>
-        );
-    } else {
-        return <Text>Maps are only supported on Android and iOS!</Text>;
-    }
-};
-export default Page;
+
+            {/* Quick Actions */}
+            <View style={styles.card}>
+                <Pressable
+                    style={styles.actionRow}
+                    onPress={handleUseCurrentLocation}
+                    disabled={locating}
+                >
+                    {locating ? (
+                        <ActivityIndicator size="small" color={Colors.primary} />
+                    ) : (
+                        <Ionicons name="locate-outline" size={22} color={Colors.primary} />
+                    )}
+                    <Text style={styles.actionText}>Use my Current Location</Text>
+                </Pressable>
+
+                <View style={styles.separator} />
+
+                <Pressable
+                    style={styles.actionRow}
+                    onPress={() => router.push('/(auth)/(modal)/map')}
+                >
+                    <Ionicons name="add-outline" size={22} color={Colors.primary} />
+                    <View style={{ flex: 1 }}>
+                        <Text style={styles.actionText}>Add a New Address</Text>
+                    </View>
+                    <Ionicons name="chevron-forward" size={20} color="#ccc" />
+                </Pressable>
+            </View>
+
+            {/* Saved Addresses */}
+            <View style={styles.section}>
+                <Text style={styles.sectionTitle}>Saved Addresses</Text>
+
+                {isLoading ? (
+                    <View style={styles.loadingContainer}>
+                        <ActivityIndicator size="small" color={Colors.primary} />
+                    </View>
+                ) : savedAddresses && savedAddresses.length > 0 ? (
+                    <View style={styles.card}>
+                        {savedAddresses.map((item, index) => (
+                            <React.Fragment key={item._id}>
+                                {index > 0 && <View style={styles.separator} />}
+                                <Pressable
+                                    style={styles.addressRow}
+                                    onPress={() => handleSelectSavedAddress(item)}
+                                >
+                                    <View style={styles.iconCircle}>
+                                        <Ionicons
+                                            name={getLabelIcon(item.label)}
+                                            size={20}
+                                            color={Colors.primary}
+                                        />
+                                    </View>
+                                    <View style={{ flex: 1 }}>
+                                        <Text style={styles.addressLabel}>{item.label}</Text>
+                                        <Text style={styles.addressText} numberOfLines={1}>
+                                            {item.address}
+                                        </Text>
+                                    </View>
+                                    {item.isDefault && (
+                                        <View style={styles.defaultBadge}>
+                                            <Text style={styles.defaultBadgeText}>Default</Text>
+                                        </View>
+                                    )}
+                                    <Ionicons name="chevron-forward" size={20} color="#ccc" />
+                                </Pressable>
+                            </React.Fragment>
+                        ))}
+                    </View>
+                ) : (
+                    <View style={styles.emptyContainer}>
+                        <Ionicons name="location-outline" size={40} color="#ccc" />
+                        <Text style={styles.emptyText}>No saved addresses yet</Text>
+                        <Text style={styles.emptySubtext}>
+                            Add a new address to get started
+                        </Text>
+                    </View>
+                )}
+            </View>
+        </ScrollView>
+    )
+}
+
+export default memo(Page)
+
 const styles = StyleSheet.create({
-    header: {
-        position: 'absolute',
-        top: 0,
-        left: 16,
-        right: 16,
-        zIndex: 10,
+    container: {
+        flex: 1,
+        backgroundColor: '#f5f5f5',
+    },
+    searchContainer: {
+        backgroundColor: '#fff',
+        paddingHorizontal: 16,
+        paddingBottom: 12,
+    },
+    searchBar: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
-    },
-    backButton: {
-        width: 40,
-        height: 40,
-        backgroundColor: Colors.background,
-        borderRadius: 20,
-        alignItems: 'center',
-        justifyContent: 'center',
-        boxShadow: '0px 4px 2px -2px rgba(0, 0, 0, 0.1)',
-    },
-    headerRight: {
-        flexDirection: 'row',
-        alignItems: 'center',
+        borderWidth: 1,
+        borderRadius: 10,
+        paddingHorizontal: 12,
+        paddingVertical: 8,
+        borderColor: '#ddd',
+        backgroundColor: '#f5f5f5',
         gap: 8,
     },
-    footerScroll: {
-        position: 'absolute',
-        bottom: 30,
-        left: 0,
-        right: 0,
-        paddingBottom: 20,
-    },
-    scrollContent: {
-        paddingHorizontal: 16,
-        gap: 12,
-        marginVertical: 16,
+    searchInput: {
+        flex: 1,
+        fontSize: 14,
+        color: Colors.dark,
     },
     card: {
-        width: 280,
         backgroundColor: '#fff',
-        borderRadius: 16,
-        boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.15)',
-        flexDirection: 'row',
-    },
-    cardImage: {
-        width: 60,
-        height: 60,
+        marginHorizontal: 16,
         borderRadius: 12,
-        margin: 10,
+        overflow: 'hidden',
     },
-    cardContent: {
-        flex: 1,
-        padding: 12,
-        paddingLeft: 0,
-        justifyContent: 'center',
-    },
-    cardHeader: {
+    actionRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 6,
-        marginBottom: 4,
+        gap: 12,
+        paddingVertical: 16,
+        paddingHorizontal: 16,
     },
-    cardTitle: {
+    actionText: {
         fontSize: 15,
-        fontWeight: '600',
-        color: '#000',
-        flex: 1,
+        fontFamily: Fonts.brandBold,
+        color: Colors.primary,
     },
-    woltBadge: {
-        backgroundColor: '#009de0',
-        borderRadius: 4,
-        paddingHorizontal: 6,
-        paddingVertical: 2,
+    separator: {
+        height: 1,
+        backgroundColor: '#f0f0f0',
+        marginHorizontal: 16,
     },
-    woltBadgeText: {
-        fontSize: 10,
-        fontWeight: '700',
-        color: '#fff',
+    section: {
+        marginTop: 20,
+        paddingHorizontal: 16,
     },
-    cardDescription: {
-        fontSize: 13,
-        color: '#666',
-        marginBottom: 6,
+    sectionTitle: {
+        fontSize: 16,
+        fontFamily: Fonts.brandBold,
+        color: Colors.dark,
+        marginBottom: 10,
     },
-    cardFooter: {
+    addressRow: {
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 4,
+        gap: 12,
+        paddingVertical: 14,
+        paddingHorizontal: 16,
     },
-    cardFooterText: {
-        fontSize: 12,
-        color: '#666',
+    iconCircle: {
+        width: 38,
+        height: 38,
+        borderRadius: 19,
+        backgroundColor: Colors.primaryLight,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    addressLabel: {
+        fontSize: 15,
+        fontFamily: Fonts.brandBold,
+        color: Colors.dark,
+    },
+    addressText: {
+        fontSize: 13,
+        color: Colors.muted,
+        marginTop: 2,
+    },
+    defaultBadge: {
+        backgroundColor: Colors.primaryLight,
+        paddingHorizontal: 8,
+        paddingVertical: 3,
+        borderRadius: 6,
+    },
+    defaultBadgeText: {
+        fontSize: 11,
+        fontFamily: Fonts.brandBold,
+        color: Colors.primary,
     },
     loadingContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
         backgroundColor: '#fff',
+        borderRadius: 12,
+        padding: 30,
+        alignItems: 'center',
     },
-});
+    emptyContainer: {
+        backgroundColor: '#fff',
+        borderRadius: 12,
+        padding: 30,
+        alignItems: 'center',
+        gap: 6,
+    },
+    emptyText: {
+        fontSize: 15,
+        fontFamily: Fonts.brandBold,
+        color: Colors.dark,
+        marginTop: 8,
+    },
+    emptySubtext: {
+        fontSize: 13,
+        color: Colors.muted,
+    },
+})

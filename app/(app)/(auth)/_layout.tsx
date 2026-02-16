@@ -23,23 +23,18 @@ const Layout = () => {
             <Stack.Screen
                 name="(modal)/address"
                 options={{
-                    presentation: "formSheet",
-                    sheetAllowedDetents: [0.7],
-                    title: "",
+                    presentation: "fullScreenModal",
+                    title: "Select Location",
                     headerShadowVisible: false,
-                    sheetCornerRadius: 16,
-                    sheetGrabberVisible: true,
-                    headerRight: () => (
-                        <TouchableOpacity
-                            style={{ padding: 4, borderRadius: 20, backgroundColor: Colors.light }}
-                            onPress={() => router.dismiss()}>
-                            <Ionicons name="close-sharp" size={28} />
-                        </TouchableOpacity>
-                    )
-
-                }
-                }
-
+                }}
+            />
+            <Stack.Screen
+                name="(modal)/save-address"
+                options={{
+                    presentation: "fullScreenModal",
+                    title: "Save Address",
+                    headerShadowVisible: false,
+                }}
             />
             <Stack.Screen name="(modal)/filter" options={{
                 presentation: "formSheet",
@@ -53,28 +48,20 @@ const Layout = () => {
                 },
                 headerRight: () => (
                     <TouchableOpacity
-                        style={{ padding: 4, borderRadius: 20, backgroundColor: Colors.light }}
+                        activeOpacity={0.3}
+                        style={{ padding: 4, borderRadius: 20, backgroundColor: Colors.light, marginRight: 8 }}
                         onPress={() => router.dismiss()}>
                         <Ionicons name="close-sharp" size={28} />
                     </TouchableOpacity>
                 )
             }} />
-            <Stack.Screen name="(modal)/location" options={{
-                presentation: "formSheet",
-                sheetAllowedDetents: [0.7],
-                title: "",
-                headerShadowVisible: false,
-                sheetCornerRadius: 16,
-                sheetGrabberVisible: true,
-                headerRight: () => (
-                    <TouchableOpacity
-                        style={{ padding: 4, borderRadius: 20, backgroundColor: Colors.light }}
-                        onPress={() => router.dismiss()}>
-                        <Ionicons name="close-sharp" size={28} />
-                    </TouchableOpacity>
-                )
-            }} />
-            <Stack.Screen name="(modal)/map" options={{ headerShown: false }} />
+            <Stack.Screen name="(modal)/map"
+
+                options={{
+                    presentation: "fullScreenModal",
+                    headerShown: false,
+                    headerShadowVisible: false,
+                }} />
 
             <Stack.Screen
                 name="order"

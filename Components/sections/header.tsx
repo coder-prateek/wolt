@@ -90,9 +90,6 @@ const RestaurantHeader = ({ title, profile = false, search = false, scrollOffset
     }
 
 
-
-    // console.log(displayCurrentAddress)
-
     return (
         <Animated.View className=" bg-black" style={[styles.headerContainer, shadowStyle, { paddingTop: insets.top }]}>
             {
@@ -106,11 +103,9 @@ const RestaurantHeader = ({ title, profile = false, search = false, scrollOffset
                             <TouchableOpacity onPress={() => router.push('/(auth)/(modal)/address')} className="flex-col">
                                 <Text className="text-gray-600 text-sm font-bold">Delever to</Text>
                                 <View className='flex-row items-center justify-center'>
-
                                     <Text className="text-gray-800 text-md  w-60 " numberOfLines={1} >{displayCurrentAddress ?? "Loading..."}</Text>
                                     <Ionicons name="chevron-down" size={16} color="black" />
                                 </View>
-
                             </TouchableOpacity>
                         </View>
 

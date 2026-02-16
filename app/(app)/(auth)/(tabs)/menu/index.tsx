@@ -29,9 +29,6 @@ const Page = () => {
                 scrollEventThrottle={16}
                 showsVerticalScrollIndicator={false}>
                 <Menutab />
-
-
-
             </Animated.ScrollView>
             <CartBottomBar />
         </View>
